@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            background-image: url('https://www.transparenttextures.com/patterns/paper.png'); /* Optional background texture */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border: 5px solid #ff69b4; /* Pink border */
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            border-radius: 12px; /* Rounded corners for buttons */
+        }
+
+        .yes-button, .yes-button-heart {
+            background-color: #4CAF50;
+        }
+        .yes-button:hover, .yes-button-heart:hover {
+            background-color: #45a049;
+        }
+
+        .no-button {
+            background-color: #ff5a5f;
+            transition: all 0.1s ease-in-out;
+            position: absolute; /* Change to absolute for free movement */
+        }
+        .no-button:hover {
+            background-color: #ff3e42;
+        }
+
+        #question1, #question2 {
+            display: none;
+        }
+        #gif {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .question-image {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        /* Celebration screen styles */
+        .celebration-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .celebration-image {
+            width: 300px;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="question1">
+        <img class="question-image" src="https://media1.tenor.com/m/9gqIF9ZtnF8AAAAd/nervous-dog-shy-wuba.gif" alt="Question Image">
+        
+        <p>Are you busy on February 14th?</p>
+        <div id="buttons-container">
+            <button class="yes-button" onclick="nextQuestion('yes')">Yes</button>
+            <button class="no-button" id="noButton" onmouseover="moveNoButton()" onclick="nextQuestion('no')">No</button>
+        </div>
+    </div>
+
+    <div id="question2">
+        <img id="responseImage" src="https://via.placeholder.com/200" alt="Reaction Image" class="question-image">
+        <img id="gif" src="https://media1.tenor.com/m/jwfpvc5_UE0AAAAd/rose-romantic.gif" alt="gif" width="200px">
+        <p>Will you mayhaps, be my Valentine?</p>
+        <div id="buttons-container">
+            <button class="yes-button-heart" id="yesButton" onclick="showCelebration()">Yes</button>
+            <button class="no-button" id="noButton2" onclick="handleNo()">No</button>
+        </div>
+    </div>
+</div>
+
+<!-- Celebration Screen -->
+<div id="celebrationScreen" class="celebration-screen">
+    <p>🎉 Yay! My Valentine! 💖 See you feb 15th ;></p>
+    <img class="celebration-image" src="https://media1.tenor.com/m/DvicpgBAWIwAAAAC/kristigocouple2024.gif" alt="Celebration Image">
+</div>
+
+<!-- Sounds -->
+<audio id="vineBoomSound" src="https://www.myinstants.com/media/sounds/vine-boom.mp3"></audio>
+<audio id="celebrationSound" src="https://www.myinstants.com/en/instant/yippeeeeeeeeeeeeee-34261/?utm_source=copy&utm_medium=share"></audio>
+
+
+<script>
+    let noClickCount = 0;
+    let isSecondQuestion = false;
+    let noButtonSize = 16;
+    let yesButtonSize = 16;
+
+    document.getElementById('question1').style.display = 'block';
+
+    function playBoomSound() {
+        document.getElementById('vineBoomSound').play();
+    }
+
+    function moveNoButton() {
+        const noButton = document.getElementById('noButton');
+        const screenWidth = window.innerWidth - noButton.offsetWidth;
+        const screenHeight = window.innerHeight - noButton.offsetHeight;
+
+        // Define a smaller margin to keep the button within bounds
+        const margin = 50; // Smaller margin
+
+        // Generate random position for the button within the defined margin
+        const randomX = Math.floor(Math.random() * (screenWidth - margin)) + margin / 2;
+        const randomY = Math.floor(Math.random() * (screenHeight - margin)) + margin / 2;
+
+        // Set the new position for the button
+        noButton.style.left = randomX + 'px';
+        noButton.style.top = randomY + 'px';
+
+        playBoomSound();
+    }
+
+    function nextQuestion(answer) {
+        if (answer === 'yes') {
+            document.getElementById('question1').style.display = 'none';
+            document.getElementById('question2').style.display = 'block';
+            document.getElementById('gif').style.display = 'block';
+            isSecondQuestion = true;
+        } else {
+            alert('I guess I’ll have to find something else to do!');
+        }
+    }
+
+    function handleNo() {
+        noClickCount++;
+        const noButton = document.getElementById('noButton2');
+        const yesButton = document.getElementById('yesButton');
+        const responseImage = document.getElementById('responseImage');
+
+        const messages = [
+            "No", "Are you sure?", "Pretty please?", "I'll be good to you!", 
+            "PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE!", "Baka!"
+        ];
+        const imageUrls = [
+            "https://media1.tenor.com/m/2A0HDP3HSvEAAAAC/very-cat.gif",  
+            "https://media1.tenor.com/m/gm_mhpzK1wsAAAAC/gato-cat.gif",  
+            "https://media.tenor.com/RJgIui1E_2QAAAAi/teddy-bear.gif",  
+            "https://media1.tenor.com/m/fh3_rncCGeoAAAAC/z.gif",  
+            "https://media1.tenor.com/m/fh3_rncCGeoAAAAC/z.gif",  
+            "https://media1.tenor.com/m/IMxQ6Pil13cAAAAd/anyealator-sad-dog.gif"   
+        ];
+
+        if (noClickCount < messages.length) {
+            noButton.innerText = messages[noClickCount];
+            responseImage.src = imageUrls[noClickCount];
+        } else {
+            if (noButtonSize > 5) {
+                noButtonSize -= 2;
+                noButton.style.fontSize = noButtonSize + "px";
+                noButton.style.padding = (noButtonSize / 2) + "px";
+            }
+
+            if (yesButtonSize < 32) {
+                yesButtonSize += 3;
+                yesButton.style.fontSize = yesButtonSize + "px";
+                yesButton.style.padding = (yesButtonSize / 2) + "px";
+            }
+
+            moveNoButton();
+        }
+
+        playBoomSound();
+    }
+
+    function showCelebration() {
+        document.getElementById('celebrationScreen').style.display = 'flex';
+        const sound = document.getElementById('celebrationSound');
+        
+        sound.play().catch(error => {
+            console.log("Autoplay blocked. Waiting for user interaction.");
+        });
+    }
+</script>
+
+</body>
+</html>
